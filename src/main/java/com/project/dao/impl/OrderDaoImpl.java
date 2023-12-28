@@ -3,6 +3,7 @@ package com.project.dao.impl;
 import java.util.List;
 import java.util.Scanner;
 
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -12,6 +13,8 @@ import com.project.dao.OrderDao;
 import com.project.entity.Customer;
 import com.project.entity.MenuItem;
 import com.project.entity.Order;
+import com.project.exception.CustomException;
+
 /*
  * Amit Kumar Modak 
  */
@@ -26,6 +29,7 @@ public class OrderDaoImpl implements OrderDao {
 	static int total_Entities = 0;
 	static int customer_total_entities = 0;
 	static List<Order> customerOrderList = null;
+
 	public OrderDaoImpl() {
 
 	}
@@ -57,76 +61,83 @@ public class OrderDaoImpl implements OrderDao {
 	@Override
 	public void addOrder() {
 		customerDaoImpl.viewCustomer();
-		if (CustomerDaoImpl.customer_list.size() != 0) {
-			System.out.print("Enter customer id:");
-			int c_id = sn.nextInt();
+			if (CustomerDaoImpl.customer_list.size() != 0) {
+				System.out.print("Enter customer id:");
+				int c_id = sn.nextInt();
 
-			menuItemDaoImpl.getMenuItem();
-			menuItemDaoImpl.showAvailableMenuItem();
-			if (MenuItemDaoImpl.menu_item_list.size() != 0) {
-				System.out.println("Enter menu id: ");
-				int m_id = sn.nextInt();
+				menuItemDaoImpl.getMenuItem();
+				menuItemDaoImpl.showAvailableMenuItem();
+				if (MenuItemDaoImpl.menu_item_list.size() != 0) {
+					System.out.println("Enter menu id: ");
+					int m_id = sn.nextInt();
 
-				Session session = HibernetUtil.getSessionFactory().openSession();
-				Transaction tn = null;
-				Customer existingCustomer = null;
-				try {
-					String hql = "from Customer where customer_id = :id";
-					Query<Customer> query = session.createQuery(hql, Customer.class);
-					query.setParameter("id", c_id);
-					existingCustomer = query.getSingleResult();
-					System.out.println("-----------------------------------");
+					Session session = HibernetUtil.getSessionFactory().openSession();
+					Transaction tn = null;
+					Customer existingCustomer = null;
+					try {
+						String hql = "from Customer where customer_id = :id";
+						Query<Customer> query = session.createQuery(hql, Customer.class);
+						query.setParameter("id", c_id);
+						existingCustomer = query.getSingleResult();
+						System.out.println("-----------------------------------");
 
-				} catch (Exception e) {
-					System.out.println("Exception Ocuured" + e);
-				}
-
-				MenuItem existingMenuItem = null;
-				try {
-					String hql = "from MenuItem where item_id = :mid";
-					Query<MenuItem> query = session.createQuery(hql, MenuItem.class);
-					query.setParameter("mid", m_id);
-					existingMenuItem = query.getSingleResult();
-					System.out.println("-----------------------------------");
-
-				} catch (Exception e) {
-					System.out.println("Exception Ocuured" + e);
-				}
-
-				String order_status = "Placed";
-
-				System.out.println("Enter order item number:");
-				int item_number = sn.nextInt();
-
-				int menu_price = item_number * existingMenuItem.getItem_price();
-				Order newOrder = new Order(order_status, item_number, menu_price);
-				newOrder.setMenu(existingMenuItem);
-				newOrder.setCustomer(existingCustomer);
-
-				session = HibernetUtil.getSessionFactory().openSession();
-				tn = null;
-				try {
-					tn = session.beginTransaction();
-					session.save(newOrder);
-					tn.commit();
-				} catch (Exception e) {
-					if (tn != null && tn.isActive()) {
-						tn.rollback();
+					} catch (Exception e) {
+						System.out.println("Throw Custom Exception");
+						throw new CustomException("Exception Occured: " + e.getMessage());
+						
 					}
-					e.printStackTrace(); // Log or handle the exception appropriately
-				} finally {
-					session.close();
+
+					MenuItem existingMenuItem = null;
+					try {
+						String hql = "from MenuItem where item_id = :mid";
+						Query<MenuItem> query = session.createQuery(hql, MenuItem.class);
+						query.setParameter("mid", m_id);
+						existingMenuItem = query.getSingleResult();
+						System.out.println("-----------------------------------");
+
+					} catch (Exception e) {
+						System.out.println("Throw Custom Exception");
+						throw new CustomException("Exception Occured: " + e.getMessage());
+					}
+
+					String order_status = "Placed";
+
+					System.out.println("Enter order item number:");
+					int item_number = sn.nextInt();
+
+					int menu_price = item_number * existingMenuItem.getItem_price();
+					Order newOrder = new Order(order_status, item_number, menu_price);
+					newOrder.setMenu(existingMenuItem);
+					newOrder.setCustomer(existingCustomer);
+
+					session = HibernetUtil.getSessionFactory().openSession();
+					tn = null;
+					try {
+						tn = session.beginTransaction();
+						session.save(newOrder);
+						tn.commit();
+					} catch (Exception e) {
+						if (tn != null && tn.isActive()) {
+							tn.rollback();
+						}
+						e.printStackTrace(); // Log or handle the exception appropriately
+						System.out.println("Throw Custom Exception");
+						throw new CustomException("Exception Occured: " + e.getMessage());
+					} finally {
+						session.close();
+					}
+				} else {
+					System.out.println("Enter Menu first");
 				}
 			} else {
-				System.out.println("Enter Menu first");
+				System.out.println("Enter Customer first");
 			}
-		} else {
-			System.out.println("Enter Customer first");
-		}
 
 	}
+
 	@Override
 	public void addOrder(int c_id) {
+		
 		menuItemDaoImpl.getMenuItem();
 		menuItemDaoImpl.showAvailableMenuItem();
 		if (MenuItemDaoImpl.menu_item_list.size() != 0) {
@@ -144,7 +155,8 @@ public class OrderDaoImpl implements OrderDao {
 				System.out.println("-----------------------------------");
 
 			} catch (Exception e) {
-				System.out.println("Exception Ocuured" + e);
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			}
 
 			MenuItem existingMenuItem = null;
@@ -156,7 +168,8 @@ public class OrderDaoImpl implements OrderDao {
 				System.out.println("-----------------------------------");
 
 			} catch (Exception e) {
-				System.out.println("Exception Ocuured" + e);
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			}
 
 			String order_status = "Placed";
@@ -180,6 +193,8 @@ public class OrderDaoImpl implements OrderDao {
 					tn.rollback();
 				}
 				e.printStackTrace(); // Log or handle the exception appropriately
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			} finally {
 				session.close();
 			}
@@ -208,12 +223,14 @@ public class OrderDaoImpl implements OrderDao {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Exception Ocuured" + e);
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 		}
 
 	}
+
 	@Override
 	public void viewAllOrder(int c_id) {
 		Session session = HibernetUtil.getSessionFactory().openSession();
@@ -235,18 +252,130 @@ public class OrderDaoImpl implements OrderDao {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Exception Ocuured" + e);
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 		}
 	}
+
 	@Override
 	public void updateOrder() {
+		int ch;
 		viewAllOrder();
-		if (total_Entities != 0) {
-		}
+		System.out.println("Enter id of the order: ");
+		int id = sn.nextInt();
+		System.out.println("To change customer id press 1");
+		System.out.println("To change order status press 2");
+		System.out.println("To change item number press 3");
+		System.out.print("Enter your choice: ");
+		ch = sn.nextInt();
+		Session session = HibernetUtil.getSessionFactory().openSession();
+		Transaction transaction = null;
+		int updatedEntities = 0;
+		String hql;
+		switch (ch) {
+		case 1: // customer ID
+			customerDaoImpl.viewCustomer();
+			System.out.println("Enter customer ID: ");
+			int cusId = sn.nextInt();
 
+			try {
+				transaction = session.beginTransaction();
+				hql = "UPDATE Order SET cus_id = :newCusId WHERE order_id = :orderId";
+				updatedEntities = session.createQuery(hql).setParameter("newCusId", cusId).setParameter("orderId", id)
+						.executeUpdate();
+				transaction.commit();
+				if (updatedEntities == 0) {
+					System.out.println("No matching data");
+				} else {
+					System.out.println("Update Successfully");
+				}
+			} catch (Exception e) {
+				if (transaction != null && transaction.isActive()) {
+					transaction.rollback();
+				}
+				e.printStackTrace(); // Log or handle the exception appropriately
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
+			}
+			break;
+		case 2: // order status
+			System.out.println("Enter order status: ");
+			String status = sn.next();
+
+			try {
+				transaction = session.beginTransaction();
+				hql = "UPDATE Order SET order_status = :newStatus WHERE order_id = :orderId";
+				updatedEntities = session.createQuery(hql).setParameter("newStatus", status).setParameter("orderId", id)
+						.executeUpdate();
+				transaction.commit();
+				if (updatedEntities == 0) {
+					System.out.println("No matching data");
+				} else {
+					System.out.println("Update Successfully");
+				}
+			} catch (Exception e) {
+				if (transaction != null && transaction.isActive()) {
+					transaction.rollback();
+				}
+				e.printStackTrace(); // Log or handle the exception appropriately
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
+			}
+			break;
+		case 3: // item number
+			Query<Order> query;
+			try {
+				transaction = session.beginTransaction();
+				hql = "FROM Order WHERE order_id = :orderId";
+				query = session.createQuery(hql, Order.class);
+				query.setParameter("orderId", id);
+				transaction.commit();
+
+			} catch (Exception e) {
+				if (transaction != null && transaction.isActive()) {
+					transaction.rollback();
+				}
+				e.printStackTrace(); // Log or handle the exception appropriately
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
+			}
+			Order updatedOrder = session.get(Order.class, id);
+			if (updatedOrder.getOrder_status() != "out for delivery") {
+				System.out.println("Enter item number: ");
+				int itemNumber = sn.nextInt();
+				int newPrice = itemNumber * (updatedOrder.getOrder_price() / updatedOrder.getOrder_itemNumber());
+				try {
+					transaction = session.beginTransaction();
+					hql = "UPDATE Order SET order_itemNumber = :newItemNumber, order_price = :newOrderPrice WHERE order_id = :orderId";
+					updatedEntities = session.createQuery(hql).setParameter("newItemNumber", itemNumber)
+							.setParameter("newOrderPrice", newPrice).setParameter("orderId", id).executeUpdate();
+					transaction.commit();
+					if (updatedEntities == 0) {
+						System.out.println("No matching data");
+					} else {
+						System.out.println("Update Successfully");
+					}
+				} catch (Exception e) {
+					if (transaction != null && transaction.isActive()) {
+						transaction.rollback();
+					}
+					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
+				}
+			} else {
+				System.out.println("Can not update");
+				System.out.println("The order is out for delivery");
+			}
+			break;
+		default:
+			System.out.println("Invalid Choice; Try Again");
+		}
+		session.close();
 	}
+
 	@Override
 	public void cancelOrder() {
 		if (customer_total_entities != 0) {
@@ -280,15 +409,19 @@ public class OrderDaoImpl implements OrderDao {
 							tn.rollback();
 						}
 						e.printStackTrace();
+						System.out.println("Throw Custom Exception");
+						throw new CustomException("Exception Occured: " + e.getMessage());
 					}
 				}
 			} catch (Exception e) {
-				System.out.println("Exception Ocuured" + e);
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			} finally {
 				session.close();
 			}
 		}
 	}
+
 	@Override
 	public void deleteOrder() {
 		viewAllOrder();

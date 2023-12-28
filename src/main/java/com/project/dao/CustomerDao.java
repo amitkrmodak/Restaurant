@@ -1,5 +1,7 @@
 package com.project.dao;
-
+/*
+ * Amit Kumar Modak 
+ */
 public interface CustomerDao {
 
 	void addCustomer();

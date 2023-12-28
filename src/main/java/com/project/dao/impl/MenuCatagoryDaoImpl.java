@@ -10,6 +10,7 @@ import org.hibernate.query.Query;
 import com.project.util.HibernetUtil;
 import com.project.dao.MenuCatagoryDao;
 import com.project.entity.MenuCatagory;
+import com.project.exception.CustomException;
 
 /*
  * Amit Kumar Modak 
@@ -72,6 +73,8 @@ public class MenuCatagoryDaoImpl implements MenuCatagoryDao{
 					tn.rollback();
 				}
 				e.printStackTrace(); // Log or handle the exception appropriately
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			} finally {
 				session.close();
 				
@@ -91,7 +94,7 @@ public class MenuCatagoryDaoImpl implements MenuCatagoryDao{
 			return(existingMenuCatagory);
 
 		} catch (Exception e) {
-			System.out.println("Exception Ocuured" + e);
+			System.out.println("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 			
@@ -105,7 +108,8 @@ public class MenuCatagoryDaoImpl implements MenuCatagoryDao{
 			String hql = "from MenuCatagory";
 			menu_catagory_list = session.createQuery(hql, MenuCatagory.class).getResultList();
 		} catch (Exception e) {
-			System.out.println("Exception Ocuured" + e);
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 		}
@@ -158,6 +162,8 @@ public class MenuCatagoryDaoImpl implements MenuCatagoryDao{
 						tn.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				}
 				finally {
 					session.close();
@@ -215,6 +221,8 @@ public class MenuCatagoryDaoImpl implements MenuCatagoryDao{
 				transaction.rollback();
 			}
 			e.printStackTrace(); // Log or handle the exception appropriately
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 			

@@ -1,7 +1,9 @@
 package com.project.dao;
 
 import com.project.entity.MenuType;
-
+/*
+ * Amit Kumar Modak 
+ */
 public interface MenuTypeDao {
 
 	void addMenuType();

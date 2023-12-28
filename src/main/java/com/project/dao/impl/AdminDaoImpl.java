@@ -1,5 +1,6 @@
 package com.project.dao.impl;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,20 +11,23 @@ import com.project.dao.AdminDao;
 import com.project.encrypt.PasswordProtect;
 import com.project.util.HibernetUtil;
 import com.project.entity.Admin;
+import com.project.exception.CustomException;
+
 /*
  * Amit Kumar Modak 
  */
-public class AdminDaoImpl implements AdminDao{
+public class AdminDaoImpl implements AdminDao {
 
-//	public static void main(String[] args) {
-////		addAdmin();
-////		viewAdmin();
-////		updateAdmin();
+	public static void main(String[] args) {
+		new AdminDaoImpl(1);
+//		addAdmin();
+//		viewAdmin();
+//		updateAdmin();
 //		deleteAdmin();
-//	}
-	
+	}
 
 	private static Scanner sn = new Scanner(System.in);
+
 	public AdminDaoImpl(int choice) {
 		switch (choice) {
 		case 1:
@@ -40,7 +44,9 @@ public class AdminDaoImpl implements AdminDao{
 			break;
 		}
 	}
+
 	private static int totalEntities = 0;
+
 	@Override
 	public void addAdmin() {
 		System.out.println("Enter admin email:");
@@ -48,20 +54,26 @@ public class AdminDaoImpl implements AdminDao{
 		if (isAdminExists(email) != 0) {
 			System.out.println("The email is already exist");
 		} else {
-			System.out.println("Enter admin name:");
-			String name = sn.next();
-			System.out.println("Enter admin contact no:");
-			long contact = sn.nextLong();
-			System.out.println("Enter admin password:");
-			String password = sn.next();
-			
-			PasswordProtect objPasswordProtect = new PasswordProtect();
-			String protected_password = objPasswordProtect.encryptPassword(password);
-			
+			Admin admin;
+			try {
+				System.out.println("Enter admin name:");
+				String name = sn.next();
+				System.out.println("Enter admin contact no:");
+				long contact = sn.nextLong();
+				System.out.println("Enter admin password:");
+				String password = sn.next();
+				PasswordProtect objPasswordProtect = new PasswordProtect();
+				String protected_password = objPasswordProtect.encryptPassword(password);
+				admin = new Admin(name, contact, email, protected_password);
+			} catch (InputMismatchException ex) {
+				throw new CustomException("Error inserting data, dont use white space: " + ex.getMessage());
+				
+
+			}
 			Session session = HibernetUtil.getSessionFactory().openSession();
 			Transaction tn = null;
 
-			Admin admin = new Admin(name, contact, email, protected_password);
+			
 
 			session = HibernetUtil.getSessionFactory().openSession();
 			tn = null;
@@ -75,11 +87,14 @@ public class AdminDaoImpl implements AdminDao{
 					tn.rollback();
 				}
 				e.printStackTrace(); // Log or handle the exception appropriately
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			} finally {
 				session.close();
 			}
 		}
 	}
+
 	@Override
 	public void viewAdmin() {
 		Session session = HibernetUtil.getSessionFactory().openSession();
@@ -102,13 +117,15 @@ public class AdminDaoImpl implements AdminDao{
 				System.out.println("-----------------------------------------------------------");
 			}
 		} catch (Exception e) {
-			System.out.println("Exception Ocuured" + e);
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 		}
 
 	}
-	@Override 
+
+	@Override
 	public void updateAdmin() {
 		viewAdmin();
 		if (totalEntities != 0) {
@@ -145,6 +162,8 @@ public class AdminDaoImpl implements AdminDao{
 						transaction.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				}
 				break;
 			case 2: // number
@@ -166,6 +185,8 @@ public class AdminDaoImpl implements AdminDao{
 						transaction.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				}
 				break;
 			case 3: // email
@@ -190,10 +211,12 @@ public class AdminDaoImpl implements AdminDao{
 							transaction.rollback();
 						}
 						e.printStackTrace(); // Log or handle the exception appropriately
+						System.out.println("Throw Custom Exception");
+						throw new CustomException("Exception Occured: " + e.getMessage());
 					}
 				}
 				break;
-			case 4:			//password
+			case 4: // password
 				System.out.println("Enter new password: ");
 				String password = sn.next();
 				PasswordProtect objPasswordProtect = new PasswordProtect();
@@ -214,6 +237,8 @@ public class AdminDaoImpl implements AdminDao{
 						transaction.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				}
 				break;
 			default:
@@ -222,6 +247,7 @@ public class AdminDaoImpl implements AdminDao{
 			session.close();
 		}
 	}
+
 	@Override
 	public void deleteAdmin() {
 		viewAdmin();
@@ -247,11 +273,14 @@ public class AdminDaoImpl implements AdminDao{
 					tn.rollback();
 				}
 				e.printStackTrace();
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			} finally {
 				session.close();
 			}
 		}
 	}
+
 	@Override
 	public int isAdminExists(String new_admin) {
 		Session session = HibernetUtil.getSessionFactory().openSession();
@@ -268,6 +297,8 @@ public class AdminDaoImpl implements AdminDao{
 				transaction.rollback();
 			}
 			e.printStackTrace(); // Log or handle the exception appropriately
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 		}

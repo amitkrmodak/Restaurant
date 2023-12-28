@@ -1,7 +1,9 @@
 package com.project.dao;
 
 import com.project.entity.MenuCatagory;
-
+/*
+ * Amit Kumar Modak 
+ */
 public interface MenuCatagoryDao {
 
 	void addMenuCatagory();

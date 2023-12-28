@@ -11,6 +11,7 @@ import com.project.encrypt.PasswordProtect;
 import com.project.util.HibernetUtil;
 import com.project.entity.Customer;
 import com.project.entity.Order;
+import com.project.exception.CustomException;
 
 /*
  * Amit Kumar Modak 
@@ -81,7 +82,8 @@ public class CustomerDaoImpl implements CustomerDao{
 				System.out.println("Customer added successfully");
 			} catch (Exception e) {
 				tn.rollback();
-				System.out.println("Exception occured " + e);
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			} finally {
 				session.close();
 			}
@@ -108,7 +110,8 @@ public class CustomerDaoImpl implements CustomerDao{
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Exception Ocuured" + e);
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 		}
@@ -147,6 +150,8 @@ public class CustomerDaoImpl implements CustomerDao{
 					transaction.rollback();
 				}
 				e.printStackTrace(); // Log or handle the exception appropriately
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			}
 			break;
 		case 2: // number
@@ -169,6 +174,8 @@ public class CustomerDaoImpl implements CustomerDao{
 					transaction.rollback();
 				}
 				e.printStackTrace(); // Log or handle the exception appropriately
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			}
 			break;
 		case 3: // email
@@ -195,6 +202,8 @@ public class CustomerDaoImpl implements CustomerDao{
 						transaction.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				}
 			}
 
@@ -220,6 +229,8 @@ public class CustomerDaoImpl implements CustomerDao{
 					transaction.rollback();
 				}
 				e.printStackTrace(); // Log or handle the exception appropriately
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			}
 			break;
 		case 5: // address
@@ -241,6 +252,8 @@ public class CustomerDaoImpl implements CustomerDao{
 					transaction.rollback();
 				}
 				e.printStackTrace(); // Log or handle the exception appropriately
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			}
 			break;
 		default:
@@ -332,6 +345,8 @@ public class CustomerDaoImpl implements CustomerDao{
 				tn.rollback();
 			}
 			e.printStackTrace();
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 		}
@@ -352,6 +367,8 @@ public class CustomerDaoImpl implements CustomerDao{
 				transaction.rollback();
 			}
 			e.printStackTrace(); // Log or handle the exception appropriately
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 		}

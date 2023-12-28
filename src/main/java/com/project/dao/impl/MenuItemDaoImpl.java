@@ -11,12 +11,13 @@ import com.project.util.HibernetUtil;
 import com.project.entity.MenuCatagory;
 import com.project.entity.MenuItem;
 import com.project.entity.MenuType;
+import com.project.exception.CustomException;
 /*
  * Amit Kumar Modak 
  */
 public class MenuItemDaoImpl implements MenuItemDao{
-	static MenuCatagoryDaoImpl objMenuCatagoryDao = new MenuCatagoryDaoImpl();
-	static MenuTypeDaoImpl objMenuTypeDao = new MenuTypeDaoImpl();
+	static MenuCatagoryDaoImpl menuCatagoryDaoImpl = new MenuCatagoryDaoImpl();
+	static MenuTypeDaoImpl menutypeDaoImpl = new MenuTypeDaoImpl();
 	static Scanner sn = new Scanner(System.in);
 	protected static List<MenuItem> menu_item_list = null;
 	protected static List<MenuItem> available_item_list = null;
@@ -41,8 +42,6 @@ public class MenuItemDaoImpl implements MenuItemDao{
 			break;
 		}
 	}
-	MenuCatagoryDaoImpl menuCatagoryDaoImpl = new MenuCatagoryDaoImpl();
-	MenuTypeDaoImpl menutypeDaoImpl = new MenuTypeDaoImpl();
 //	public static void main(String[] args) {
 //		int val = 0;
 //		do {
@@ -84,8 +83,8 @@ public class MenuItemDaoImpl implements MenuItemDao{
 			System.out.println("Enter Description: ");
 			String description = sn.next();
 
-			MenuCatagory existingMenuCatagory = objMenuCatagoryDao.getDataById(catagory);
-			MenuType existingMenuType = objMenuTypeDao.getDataById(type);
+			MenuCatagory existingMenuCatagory = menuCatagoryDaoImpl.getDataById(catagory);
+			MenuType existingMenuType = menutypeDaoImpl.getDataById(type);
 			if (existingMenuCatagory == null || existingMenuType == null) {
 				System.out.println("Error occured");
 			} else {
@@ -108,6 +107,8 @@ public class MenuItemDaoImpl implements MenuItemDao{
 						tn.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				} finally {
 					session.close();
 //				getMenuItem();
@@ -122,7 +123,8 @@ public class MenuItemDaoImpl implements MenuItemDao{
 			String hql = "from MenuItem";
 			menu_item_list = session.createQuery(hql, MenuItem.class).getResultList();
 		} catch (Exception e) {
-			System.out.println("Exception Ocuured" + e);
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 		}
@@ -155,7 +157,8 @@ public class MenuItemDaoImpl implements MenuItemDao{
 			String hql = "from MenuItem where item_isAvailable =: isAvalable";
 			available_item_list = session.createQuery(hql, MenuItem.class).setParameter("isAvalable", true).getResultList();
 		} catch (Exception e) {
-			System.out.println("Exception Ocuured" + e);
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 		}
@@ -221,6 +224,8 @@ public class MenuItemDaoImpl implements MenuItemDao{
 						transaction.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				} finally {
 					session.close();
 //					getMenuItem();
@@ -231,7 +236,7 @@ public class MenuItemDaoImpl implements MenuItemDao{
 				System.out.println("Enter catagory Id of the item : ");
 				int catagory = sn.nextInt();
 
-				MenuCatagory existingMenuCatagory = objMenuCatagoryDao.getDataById(catagory);
+				MenuCatagory existingMenuCatagory = menuCatagoryDaoImpl.getDataById(catagory);
 				try {
 					transaction = session.beginTransaction();
 					hql = "UPDATE MenuItem SET menuCatagory = :newCatagory WHERE item_id = :itemId";
@@ -248,6 +253,8 @@ public class MenuItemDaoImpl implements MenuItemDao{
 						transaction.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				} finally {
 					session.close();
 //					getMenuItem();
@@ -258,7 +265,7 @@ public class MenuItemDaoImpl implements MenuItemDao{
 				System.out.println("Enter type Id of the item : ");
 				int type = sn.nextInt();
 
-				MenuType existingMenuType = objMenuTypeDao.getDataById(type);
+				MenuType existingMenuType = menutypeDaoImpl.getDataById(type);
 				try {
 					transaction = session.beginTransaction();
 					hql = "UPDATE MenuItem SET menuType = :newType WHERE item_id = :itemId";
@@ -275,6 +282,8 @@ public class MenuItemDaoImpl implements MenuItemDao{
 						transaction.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				} finally {
 					session.close();
 //					getMenuItem();
@@ -300,6 +309,8 @@ public class MenuItemDaoImpl implements MenuItemDao{
 						transaction.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				} finally {
 					session.close();
 //					getMenuItem();
@@ -326,6 +337,8 @@ public class MenuItemDaoImpl implements MenuItemDao{
 						transaction.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				} finally {
 					session.close();
 				}
@@ -350,6 +363,8 @@ public class MenuItemDaoImpl implements MenuItemDao{
 						transaction.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				} finally {
 					session.close();
 				}

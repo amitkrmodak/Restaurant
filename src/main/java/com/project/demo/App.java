@@ -1,7 +1,9 @@
 package com.project.demo;
 
 import java.util.Scanner;
-
+/*
+ * Amit Kumar Modak 
+ */ 
 public class App {
 	static Scanner sn = new Scanner(System.in);
 

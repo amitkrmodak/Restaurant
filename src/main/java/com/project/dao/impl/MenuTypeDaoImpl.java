@@ -10,6 +10,7 @@ import org.hibernate.query.Query;
 import com.project.dao.MenuTypeDao;
 import com.project.util.HibernetUtil;
 import com.project.entity.*;
+import com.project.exception.CustomException;
 
 /*
  * Amit Kumar Modak 
@@ -71,6 +72,8 @@ public class MenuTypeDaoImpl implements MenuTypeDao{
 					tn.rollback();
 				}
 				e.printStackTrace(); // Log or handle the exception appropriately
+				System.out.println("Throw Custom Exception");
+				throw new CustomException("Exception Occured: " + e.getMessage());
 			} finally {
 				session.close();
 				//getMenuType();
@@ -85,7 +88,8 @@ public class MenuTypeDaoImpl implements MenuTypeDao{
 			String hql = "from MenuType";
 			menu_type_list = session.createQuery(hql, MenuType.class).getResultList();
 		} catch (Exception e) {
-			System.out.println("Exception Ocuured" + e);
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 		}
@@ -115,7 +119,7 @@ public class MenuTypeDaoImpl implements MenuTypeDao{
 			existingMenuType = query.getSingleResult();
 			return (existingMenuType);
 		} catch (Exception e) {
-			System.out.println("Exception Ocuured" + e);
+			System.out.println("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 			//getMenuType();
@@ -153,6 +157,8 @@ public class MenuTypeDaoImpl implements MenuTypeDao{
 						tn.rollback();
 					}
 					e.printStackTrace(); // Log or handle the exception appropriately
+					System.out.println("Throw Custom Exception");
+					throw new CustomException("Exception Occured: " + e.getMessage());
 				} finally {
 					session.close();
 					//getMenuType();
@@ -207,6 +213,8 @@ public class MenuTypeDaoImpl implements MenuTypeDao{
 				transaction.rollback();
 			}
 			e.printStackTrace(); // Log or handle the exception appropriately
+			System.out.println("Throw Custom Exception");
+			throw new CustomException("Exception Occured: " + e.getMessage());
 		} finally {
 			session.close();
 //			getMenuType();

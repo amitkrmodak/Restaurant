@@ -16,7 +16,9 @@ import com.project.entity.Admin;
 import com.project.entity.Customer;
 
 
-
+/*
+ * Amit Kumar Modak 
+ */
 public class Login {
 	static Scanner sn = new Scanner(System.in);
 	PasswordProtect objPasswordProtect = new PasswordProtect();
