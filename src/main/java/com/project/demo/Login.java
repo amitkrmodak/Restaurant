@@ -4,11 +4,16 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.hibernate.Session;
-
-
+import com.project.util.HibernetUtil;
+import com.project.dao.impl.AdminDaoImpl;
+import com.project.dao.impl.CustomerDaoImpl;
+import com.project.dao.impl.MenuCatagoryDaoImpl;
+import com.project.dao.impl.MenuItemDaoImpl;
+import com.project.dao.impl.MenuTypeDaoImpl;
+import com.project.dao.impl.OrderDaoImpl;
+import com.project.encrypt.PasswordProtect;
 import com.project.entity.Admin;
 import com.project.entity.Customer;
-import com.project.dao.*;
 
 
 
@@ -16,6 +21,11 @@ public class Login {
 	static Scanner sn = new Scanner(System.in);
 	PasswordProtect objPasswordProtect = new PasswordProtect();
 	static int customerLoginId = 0;
+	
+	static MenuItemDaoImpl menuItemDaoImpl = new MenuItemDaoImpl();
+	static OrderDaoImpl orderDaoImpl = new OrderDaoImpl();
+	static CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+	
 	private static void adminDashboard() {
 		int ch;
 		do {
@@ -32,7 +42,6 @@ public class Login {
 			switch (ch) {
 			case 1: // Customer Details
 				int cch;
-				//CustomerDao objCustomerDao = new CustomerDao();
 				do {
 					System.out.println("==============Customer Details==============");
 					System.out.println("To add customer press 1");
@@ -44,19 +53,19 @@ public class Login {
 					cch = sn.nextInt();
 					switch (cch) {
 					case 1: 	//add customer
-						CustomerDao.addCustomer();
+						customerDaoImpl.addCustomer();
 						break;
 					case 2:
-						CustomerDao.viewCustomer();
+						customerDaoImpl.viewCustomer();
 						break;
 					case 3:
-						CustomerDao.viewCustomer();
+						customerDaoImpl.viewCustomer();
 						System.out.println("Enter Customer Id : ");
 						int id = sn.nextInt();
-						CustomerDao.updateCustomer(id);
+						customerDaoImpl.updateCustomer(id);
 						break;
 					case 4:
-						CustomerDao.deleteCustomer();
+						customerDaoImpl.deleteCustomer();
 						break;
 					case 10:
 						System.out.println("Exited from  customer");
@@ -79,16 +88,16 @@ public class Login {
 					mcch = sn.nextInt();
 					switch (mcch) {
 					case 1: 	//add customer
-						new MenuCatagoryDao(1);
+						new MenuCatagoryDaoImpl(1);
 						break;
 					case 2:
-						new MenuCatagoryDao(2);
+						new MenuCatagoryDaoImpl(2);
 						break;
 					case 3:
-						new MenuCatagoryDao(3);
+						new MenuCatagoryDaoImpl(3);
 						break;
 					case 4:
-						new MenuCatagoryDao(4);
+						new MenuCatagoryDaoImpl(4);
 						break;
 					case 10:
 						System.out.println("Exited from  customer");
@@ -111,16 +120,16 @@ public class Login {
 					mtch = sn.nextInt();
 					switch (mtch) {
 					case 1: 	
-						new MenuTypeDao(1);
+						new MenuTypeDaoImpl(1);
 						break;
 					case 2:
-						new MenuTypeDao(2);
+						new MenuTypeDaoImpl(2);
 						break;
 					case 3:
-						new MenuTypeDao(3);
+						new MenuTypeDaoImpl(3);
 						break;
 					case 4:
-						new MenuTypeDao(4);
+						new MenuTypeDaoImpl(4);
 						break;
 					case 10:
 						System.out.println("Exited from  customer");
@@ -143,16 +152,16 @@ public class Login {
 					mch = sn.nextInt();
 					switch (mch) {
 					case 1:
-						new MenuItemDao(1);
+						new MenuItemDaoImpl(1);
 						break;
 					case 2:
-						new MenuItemDao(2);
+						new MenuItemDaoImpl(2);
 						break;
 					case 3:
-						new MenuItemDao(3);
+						new MenuItemDaoImpl(3);
 						break;
 					case 4:
-						new MenuItemDao(4);
+						new MenuItemDaoImpl(4);
 						break;
 					case 10:
 						System.out.println("Exited from menu");
@@ -174,16 +183,16 @@ public class Login {
 					och = sn.nextInt();
 					switch (och) {
 					case 1:
-						new OrderDao(1);
+						new OrderDaoImpl(1);
 						break;
 					case 2:
-						new OrderDao(2);
+						new OrderDaoImpl(2);
 						break;
 //					case 3:
-//						new OrderDao(3);
+//						new OrderDaoImplementation(3);
 //						break;
 					case 4:
-						new OrderDao(4);
+						new OrderDaoImpl(4);
 						break;
 					case 10:
 						System.out.println("Exited from order");
@@ -192,7 +201,7 @@ public class Login {
 				} while (och != 10);
 				break;
 			case 6:
-				new AdminDao(3);
+				new AdminDaoImpl(3);
 				break;
 			case 10:
 				System.out.println("Exited from dashboard");
@@ -205,7 +214,7 @@ public class Login {
 	}
 	void customerLogin()
 	{
-		//CustomerDao objCustomerDao = new CustomerDao();
+		//CustomerDaoImplementation objCustomerDao = new CustomerDaoImplementation();
 		while(true) {
 			System.out.print("Enter 1 to register otherwise enter any number to login:");
 			int ch = sn.nextInt();
@@ -214,7 +223,7 @@ public class Login {
 				System.out.print("Enter customer email : ");
 				String customer_email = sn.next();
 
-				int status = CustomerDao.isCustomerAccount(customer_email);
+				int status = customerDaoImpl.isCustomerAccount(customer_email);
 				
 			    if(status != 0)
 			    {
@@ -223,7 +232,7 @@ public class Login {
 			    }
 			    else
 			    {
-			    	CustomerDao.addCustomer();
+			    	customerDaoImpl.addCustomer();
 			    }
 			}
 			else
@@ -278,27 +287,27 @@ public class Login {
 			ch = sn.nextInt();
 			switch (ch) {
 				case 1:
-					MenuItemDao.showAvailableMenuItem();
+					menuItemDaoImpl.showAvailableMenuItem();
 					break;
 				case 2:
-					OrderDao.viewAllOrder(customerLoginId);
+					orderDaoImpl.viewAllOrder(customerLoginId);
 					//viewOrder();
 					break;
 				case 3:
-					OrderDao.addOrder(customerLoginId);
+					orderDaoImpl.addOrder(customerLoginId);
 					//addOrder();
 					break;
 				case 4:
-					OrderDao.viewAllOrder(customerLoginId);
-					OrderDao.cancelOrder();
+					orderDaoImpl.viewAllOrder(customerLoginId);
+					orderDaoImpl.cancelOrder();
 					//cancelOrder();
 					break;
 				case 5:
-					CustomerDao.updateCustomer(customerLoginId);
+					customerDaoImpl.updateCustomer(customerLoginId);
 					//updateProfile();
 					break;
 				case 6:
-					CustomerDao.deleteCustomer(customerLoginId);
+					customerDaoImpl.deleteCustomer(customerLoginId);
 					ch=10;
 				case 10:
 					System.out.println("Existing from customer Dashboard");

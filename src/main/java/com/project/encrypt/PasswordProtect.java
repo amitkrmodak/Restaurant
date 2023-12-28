@@ -1,4 +1,4 @@
-package com.project.dao;
+package com.project.encrypt;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
